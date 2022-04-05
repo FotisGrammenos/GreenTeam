@@ -18,22 +18,47 @@ namespace PetShop.Blazor.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<CustomerListViewModel>> Get()
         {
-
+            var result = await _customerRepo.GetAllAsync();
+            return result.Select(x => new CustomerListViewModel
+            {
+                Id = x.ID,
+                Name = x.Name,
+                Surname = x.Surname,
+                FullName = x.FullName,
+                Phone = x.Phone,
+                TIN = x.TIN,
+            });
         }
         [HttpPost]
         public async Task Post(CustomerListViewModel customer)
         {
-
+            var newCustomer = new Customer(customer.Name,customer.Surname,customer.Phone,customer.TIN);
+           
+            await _customerRepo.AddAsync(newCustomer);
         }
         [HttpDelete("{id}")]
         public async Task Delete(Guid id)
         {
-
+            await _customerRepo.DeleteAsync(id);
         }
         [HttpPut]
         public async Task<ActionResult> Put(CustomerListViewModel customer)
         {
+            var itemToUpdate = await _customerRepo.GetByIdAsync(customer.Id);
+            if (itemToUpdate == null) return NotFound();
+            //if (customer.Finished && !itemToUpdate.Finished)
+            //{
+            //    itemToUpdate.Detail.FinishDate = DateTime.Now;
+            //}
 
+            itemToUpdate.Name = customer.Name;
+            itemToUpdate.Surname = customer.Surname;
+            itemToUpdate.Phone = customer.Phone;
+            itemToUpdate.TIN = customer.TIN;
+
+            await _customerRepo.UpdateAsync(customer.Id, itemToUpdate);
+
+            return Ok();
         }
     }
 }
