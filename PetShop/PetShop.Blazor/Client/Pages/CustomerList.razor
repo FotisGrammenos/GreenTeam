@@ -84,8 +84,15 @@ else
         NewCustomerPhone = null;
         NewCustomerTIN = null;
 
-            await httpClient.PostAsJsonAsync("customer", newCurrent);
-            await LoadItemsFromServer();
+        try { 
+            var tmp = await httpClient.PostAsJsonAsync("customer", newCurrent); 
+            }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);  
+        }
+
+        await LoadItemsFromServer();
         }
 
         async Task DeleteItem(CustomerListViewModel itemToDelete)
