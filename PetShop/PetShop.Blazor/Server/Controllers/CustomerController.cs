@@ -46,11 +46,6 @@ namespace PetShop.Blazor.Server.Controllers
         {
             var itemToUpdate = await _customerRepo.GetByIdAsync(customer.Id);
             if (itemToUpdate == null) return NotFound();
-            //if (customer.Finished && !itemToUpdate.Finished)
-            //{
-            //    itemToUpdate.Detail.FinishDate = DateTime.Now;
-            //}
-
             itemToUpdate.Name = customer.Name;
             itemToUpdate.Surname = customer.Surname;
             itemToUpdate.Phone = customer.Phone;
