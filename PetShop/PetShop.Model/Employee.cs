@@ -12,5 +12,12 @@
         {
 
         }
+        public Employee(string name,string surname,decimal sallaryPerMonth,EmployeeType employeeType)
+        {
+            Name = name;
+            Surname = surname; 
+            SallaryPerMonth = sallaryPerMonth;
+            EmployeeType = employeeType;
+        }
     }
 }
