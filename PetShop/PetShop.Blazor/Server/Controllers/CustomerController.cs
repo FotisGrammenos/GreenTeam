@@ -33,7 +33,7 @@ namespace PetShop.Blazor.Server.Controllers
         public async Task Post(CustomerListViewModel customer)
         {
             var newCustomer = new Customer(customer.Name,customer.Surname,customer.Phone,customer.TIN);
-           
+            
             await _customerRepo.AddAsync(newCustomer);
         }
         [HttpDelete("{id}")]
