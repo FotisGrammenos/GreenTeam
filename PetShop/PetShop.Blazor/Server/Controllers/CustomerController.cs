@@ -24,7 +24,6 @@ namespace PetShop.Blazor.Server.Controllers
                 Id = x.ID,
                 Name = x.Name,
                 Surname = x.Surname,
-                FullName = x.FullName,
                 Phone = x.Phone,
                 TIN = x.TIN,
             });

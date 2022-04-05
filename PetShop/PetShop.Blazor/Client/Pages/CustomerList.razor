@@ -86,20 +86,27 @@ else
         NewCustomerPhone = null;
         NewCustomerTIN = null;
 
-        await httpClient.PostAsJsonAsync("customer", newCurrent);
-        await LoadItemsFromServer();
-    }
-
-    async Task DeleteItem(CustomerListViewModel itemToDelete)
-    {
-        var confirm = await jsRuntime.InvokeAsync<bool>("confirmDelete", null);
-        if (confirm)
+        try { 
+            var tmp = await httpClient.PostAsJsonAsync("customer", newCurrent); 
+            }
+        catch (Exception e)
         {
-            var response = await httpClient.DeleteAsync($"todo/{itemToDelete.Id}");
-            response.EnsureSuccessStatusCode();
-            await LoadItemsFromServer();
+            Console.WriteLine(e);  
         }
-    }
+
+        await LoadItemsFromServer();
+        }
+
+        async Task DeleteItem(CustomerListViewModel itemToDelete)
+        {
+            var confirm = await jsRuntime.InvokeAsync<bool>("confirmDelete", null);
+            if (confirm)
+            {
+                var response = await httpClient.DeleteAsync($"customer/{itemToDelete.Id}");
+                response.EnsureSuccessStatusCode();
+                await LoadItemsFromServer();
+            }
+        }
 
     async Task TitleChanged(ChangeEventArgs e, CustomerListViewModel item)
     {
