@@ -1,5 +1,153 @@
-﻿<h3>PetList</h3>
+﻿@page "/petlist"
+@using PetShop.Model
+@inject HttpClient httpClient
+@inject IJSRuntime jsRuntime
+
+<h3>Pets</h3>
+
+<div class="row">
+    <div class="col">
+        <input @bind=NewPetBreed placeholder="Pet Breed" />
+    </div>
+    <div class="col">
+        <select @bind=NewAnimalType placeholder="Pet Animal Type">
+            @foreach (var item in Enum.GetNames(typeof(AnimalType)))
+            {
+                <option value="@((int)Enum.Parse(typeof(AnimalType), item))">@item</option>
+            }
+        </select>
+    </div>
+    <div class="col">
+        <select @bind=NewPetStatus placeholder="Pet Status">
+            @foreach (var item in Enum.GetNames(typeof(PetStatus)))
+            {
+                <option value="@((int)Enum.Parse(typeof(PetStatus), item))">@item</option>
+            }
+        </select>
+    </div>
+    <div class="col">
+        <input type="number" @bind=NewPetCost placeholder="Pet Cost" />
+    </div>
+    <div class="col">
+        <input type="number" @bind=NewPetPrice placeholder="Pet Price" />
+    </div>
+</div>
+<div class="row">
+    <button class="btn btn-outline-primary w-50" @onclick="AddPet">Add</button>
+</div>
+@if (isLoading)
+{
+    <p>Loading ...</p>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Breed</th>
+                <th>Animal Type</th>
+                <th>Status</th>
+                <th>Cost</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pet in petList)
+            {
+                <tr>
+                    <td><input value="@pet.Breed" @onchange="(e)=> BreedChanged(e, pet)" /></td>
+                    <td><input value="@pet.AnimalType" disabled/></td>
+                    <td><input value="@pet.PetStatus" disabled/></td>
+                    <td><input type="number" value="@pet.Cost" @onchange="(e)=> CostChanged(e, pet)" /></td>
+                    <td><input type="number" value="@pet.Price" @onchange="(e)=> PriceChanged(e, pet)" /></td>
+                    <td><button class="btn btn-danger" @onclick="() => DeleteItem(pet)">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
+    private string NewPetBreed { get; set; }
+    private AnimalType NewAnimalType { get; set; }
+    private PetStatus NewPetStatus { get; set; }
+    private string NewPetCost { get; set; }
+    private string NewPetPrice { get; set; }
+    List<PetViewModel> petList = new();
+    bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadItemsFromServer();
+        isLoading = false;
+    }
+
+    private async Task LoadItemsFromServer()
+    {
+        petList = await httpClient.GetFromJsonAsync<List<PetViewModel>>("pet");
+    }
+
+    async Task AddPet()
+    {
+        if (string.IsNullOrWhiteSpace(NewPetBreed) ||
+            string.IsNullOrWhiteSpace(NewAnimalType.ToString()) ||
+            string.IsNullOrWhiteSpace(NewPetStatus.ToString()) ||
+            string.IsNullOrWhiteSpace(NewPetCost) ||
+            string.IsNullOrWhiteSpace(NewPetPrice)
+        ) return;
+
+        var newPet = new PetViewModel()
+            {
+                Breed = NewPetBreed,
+                AnimalType = new AnimalType(),
+                PetStatus = NewPetStatus,
+                Cost = Convert.ToDecimal(NewPetCost),
+                Price = Convert.ToDecimal(NewPetPrice)
+            };
+
+        NewPetBreed = string.Empty;
+        NewPetCost = string.Empty;
+        NewPetPrice = string.Empty;
+
+
+        await httpClient.PostAsJsonAsync("pet", newPet);
+        await LoadItemsFromServer();
+    }
+
+    async Task DeleteItem(PetViewModel petToDelete)
+    {
+        var confirm = await jsRuntime.InvokeAsync<bool>("confirmDelete", null);
+        if (confirm)
+        {
+            var response = await httpClient.DeleteAsync($"pet/{petToDelete.Id}");
+            response.EnsureSuccessStatusCode();
+            await LoadItemsFromServer();
+        }
+    }
+
+    async Task BreedChanged(ChangeEventArgs e, PetViewModel pet)
+    {
+        pet.Breed = e.Value?.ToString();
+        var response = await httpClient.PutAsJsonAsync("pet", pet);
+        response.EnsureSuccessStatusCode();
+        await LoadItemsFromServer();
+    }
+    
+    async Task CostChanged(ChangeEventArgs e, PetViewModel pet)
+    {
+        pet.Cost = Convert.ToDecimal(e.Value);
+        var response = await httpClient.PutAsJsonAsync("pet", pet);
+        response.EnsureSuccessStatusCode();
+        await LoadItemsFromServer();
+    }
+    
+    async Task PriceChanged(ChangeEventArgs e, PetViewModel pet)
+    {
+        pet.Price = Convert.ToDecimal(e.Value);
+        var response = await httpClient.PutAsJsonAsync("pet", pet);
+        response.EnsureSuccessStatusCode();
+        await LoadItemsFromServer();
+    }
 
 }
