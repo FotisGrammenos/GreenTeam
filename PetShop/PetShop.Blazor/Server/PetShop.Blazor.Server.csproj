@@ -8,9 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\PetShop.EF\PetShop.EF.csproj" />
+    <ProjectReference Include="..\..\PetShop.Model\PetShop.Model.csproj" />
     <ProjectReference Include="..\Client\PetShop.Blazor.Client.csproj" />
     <ProjectReference Include="..\Shared\PetShop.Blazor.Shared.csproj" />
   </ItemGroup>
