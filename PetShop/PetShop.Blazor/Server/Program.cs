@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<PetShopContext>();
 builder.Services.AddScoped<IEntityRepo<Customer>,CustomerRepo>();
+builder.Services.AddScoped<IEntityRepo<Pet>, PetRepo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
