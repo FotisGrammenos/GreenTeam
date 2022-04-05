@@ -1,15 +1,15 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using PetShop.Blazor.Shared;
-//using PetShop.EF.Repos;
-//using PetShop.Model;
+﻿using Microsoft.AspNetCore.Mvc;
+using PetShop.Blazor.Shared;
+using PetShop.EF.Repos;
+using PetShop.Model;
 
-//namespace PetShop.Blazor.Server.Controllers
-//{
-//    [ApiController]
-//    [Route("[controller]")]
-//    public class CustomerController: ControllerBase
-//    {
-//        private readonly IEntityRepo<Customer> _customerRepo;
+namespace PetShop.Blazor.Server.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class CustomerController : ControllerBase
+    {
+        private readonly IEntityRepo<Customer> _customerRepo;
 
         public CustomerController(IEntityRepo<Customer> customerRepo)
         {
