@@ -100,7 +100,7 @@ else
             var confirm = await jsRuntime.InvokeAsync<bool>("confirmDelete", null);
             if (confirm)
             {
-                var response = await httpClient.DeleteAsync($"todo/{itemToDelete.Id}");
+                var response = await httpClient.DeleteAsync($"customer/{itemToDelete.Id}");
                 response.EnsureSuccessStatusCode();
                 await LoadItemsFromServer();
             }
