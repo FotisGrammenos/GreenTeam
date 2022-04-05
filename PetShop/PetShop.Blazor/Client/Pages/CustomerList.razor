@@ -1,0 +1,40 @@
+﻿@*@page "/customerlist"
+@inject HttpClient httpClient
+<h3>CustomerList </h3>
+
+<input @bind=NewItemText placeholder="New customer..."/>
+<button class="btn btn-primary" @onclick="AddItem" >Add</button>
+
+@if (isLoading)
+{
+    <p> Loading...</p>
+}
+else
+{
+   <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Finished</th>
+                <th>Finished Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var todo in todoList)
+            {
+                <tr>
+                    <td><input value="@todo.Title" @onchange="(e)=> TitleChanged(e, todo)"/></td>
+                    <td><input type="checkbox" checked="@todo.Finished" @onchange="(e) => FinishedChanged(todo)" /></td>
+                    <td>@todo.FinishedDate</td>
+                    <td><button class="btn btn-danger" @onclick="() => DeleteItem(todo)">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table> 
+}
+
+@code {
+
+}
+*@
