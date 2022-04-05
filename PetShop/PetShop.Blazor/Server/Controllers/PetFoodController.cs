@@ -7,7 +7,7 @@ namespace PetShop.Blazor.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PetFoodController
+    public class PetFoodController : ControllerBase
     {
         private readonly IEntityRepo<PetFood> _petFoodRepo;
 
