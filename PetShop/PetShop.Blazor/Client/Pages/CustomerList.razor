@@ -7,10 +7,10 @@
 
 <h3>CustomerList </h3>
 <div class="row">
-<input @bind=NewCustomerName placeholder="New customer..."/>
-<input @bind=NewCustomerSurname placeholder="New customer..."/>
-<input @bind=NewCustomerPhone placeholder="New customer..."/>
-<input @bind=NewCustomerTIN placeholder="New customer..."/>
+<input @bind=NewCustomerName placeholder="Insert Customer's name..."/>
+<input @bind=NewCustomerSurname placeholder="Insert Customer's surname..."/>
+<input @bind=NewCustomerPhone placeholder="Insert Customer's phone number..."/>
+<input @bind=NewCustomerTIN placeholder="Insert Customer's TIN..."/>
 </div>
 <button class="btn btn-primary" @onclick="AddItem" >Add</button>
 @if (isLoading)
@@ -95,16 +95,25 @@ else
         await LoadItemsFromServer();
         }
 
+        //async Task DeleteItem(CustomerListViewModel itemToDelete)
+        //{
+        //    var confirm = await jsRuntime.InvokeAsync<bool>("confirmDelete", null);
+        //    if (confirm)
+        //    {
+        //        var response = await httpClient.DeleteAsync($"customer/{itemToDelete.Id}");
+        //        response.EnsureSuccessStatusCode();
+        //        await LoadItemsFromServer();
+        //    }
+        //}
         async Task DeleteItem(CustomerListViewModel itemToDelete)
         {
-            var confirm = await jsRuntime.InvokeAsync<bool>("confirmDelete", null);
-            if (confirm)
-            {
-                var response = await httpClient.DeleteAsync($"customer/{itemToDelete.Id}");
-                response.EnsureSuccessStatusCode();
-                await LoadItemsFromServer();
-            }
+            var response = await httpClient.DeleteAsync($"customer/{itemToDelete.Id}");
+            response.EnsureSuccessStatusCode();
+            await LoadItemsFromServer();    
+                
+            
         }
+
 
         async Task TitleChanged(ChangeEventArgs e, CustomerListViewModel item)
         {
