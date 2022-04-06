@@ -1,0 +1,22 @@
+﻿@page "/employee/edit/{Id:guid?}"
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+
+<h3>Employe Edit</h3>
+@if( true)
+{
+    <p>Loading ...</p>
+}
+else
+{
+    
+}
+@code {
+    [Parameter] public Guid? Id { get; set; }
+    EmployeeEditViewModel employeeItem { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        employeeItem = await httpClient.GetFromJsonAsync<EmployeeEditViewModel>($"employee/{(Id == null ? 0 : Id)}");
+    }
+}

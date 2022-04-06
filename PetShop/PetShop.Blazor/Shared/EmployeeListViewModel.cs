@@ -12,8 +12,17 @@ namespace PetShop.Blazor.Shared
 
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string FullName { get; }
         public decimal SallaryPerMonth { get; set; }
         public EmployeeType EmployeeType { get; set; }
-}
+    }
+
+    public class EmployeeEditViewModel
+    {
+        public Guid Id;
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public decimal SallaryPerMonth { get; set; }
+        public EmployeeType EmployeeType { get; set; }
+
+    }
 }
