@@ -30,8 +30,23 @@ namespace PetShop.Blazor.Server.Controllers
 
         }
 
+        [HttpGet("{id}")]
+        public async Task<PetFoodEditViewModel> Get(Guid id)
+        {
+            PetFoodEditViewModel model = new();
+            if (id != Guid.Empty)
+            {
+                var result = await _petFoodRepo.GetByIdAsync(id);
+                model.Id = result.ID;
+                model.AnimalType = result.AnimalType;
+                model.Cost = result.Cost;
+                model.Price = result.Price;
+            }
+            return model;
+        }
+
         [HttpPost]
-        public async Task Post(PetFoodListViewModel petFood)
+        public async Task Post(PetFoodEditViewModel petFood)
         {
             var newPetFood = new PetFood()
             {
@@ -50,15 +65,15 @@ namespace PetShop.Blazor.Server.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(PetFoodListViewModel petFood)
+        public async Task<ActionResult> Put(PetFoodEditViewModel petFood)
         {
             var petFoodToUpdate = await _petFoodRepo.GetByIdAsync(petFood.Id);
             if (petFoodToUpdate == null) return NotFound();
-            petFoodToUpdate.AnimalType = petFoodToUpdate.AnimalType;
-            petFoodToUpdate.Cost = petFoodToUpdate.Cost;
-            petFoodToUpdate.Price = petFoodToUpdate.Price;
+            petFoodToUpdate.AnimalType = petFood.AnimalType;
+            petFoodToUpdate.Cost = petFood.Cost;
+            petFoodToUpdate.Price = petFood.Price;
 
-            await _petFoodRepo.AddAsync(petFoodToUpdate);
+            await _petFoodRepo.UpdateAsync(petFoodToUpdate.ID,petFoodToUpdate);
 
             return Ok();
         }

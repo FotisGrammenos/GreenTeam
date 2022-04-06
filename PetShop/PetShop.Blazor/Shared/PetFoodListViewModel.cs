@@ -14,4 +14,12 @@ namespace PetShop.Blazor.Shared
         public decimal Cost { get; set; }
         public decimal Price { get; set; }
     }
+
+    public class PetFoodEditViewModel
+    {
+        public Guid Id { get; set; }
+        public AnimalType AnimalType { get; set; }
+        public decimal Cost { get; set; }
+        public decimal Price { get; set; }
+    }
 }

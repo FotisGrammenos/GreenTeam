@@ -1,0 +1,76 @@
+﻿@page "/petFoodlist/edit/{Id:guid?}"
+@inject HttpClient httpClient
+@inject NavigationManager navManager
+
+@if (PetFoodItem == null)
+{
+    <p>Loading ...</p>
+}
+else
+{
+    @if (Id == Guid.Empty)
+    {
+        <h3>Add new pet</h3>
+    }
+    else
+    {
+        <h3>Edit Pet Food</h3>
+    }
+    <div class="row">
+        <div class="col-md-12">
+            <label for="orm-label">Animal Type</label>
+            <input class="form-control" @bind="@PetFoodItem.AnimalType" placeholder="Pet Food AnimalType" />
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-md-6">
+            <label for="form-label">Cost</label>
+            <input type="number" class="form-control" @bind="@PetFoodItem.Cost" placeholder="Pet Food Cost" />
+        </div>
+        <div class="col-md-6">
+            <label for="pet-label">Price</label>
+            <input type="number" class="form-control" @bind="@PetFoodItem.Price" placeholder="Pet Food Price" />
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <button class="btn btn-success" @onclick="OnSave">Save</button>
+            <button class="btn btn-danger" @onclick="OnCancel">Cancel</button>
+        </div>
+    </div>
+
+}
+@code {
+    [Parameter] public Guid? Id { get; set; }
+    PetFoodListViewModel PetFoodItem { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id == null)
+        {
+            Id = Guid.Empty;
+        }
+
+        PetFoodItem = await httpClient.GetFromJsonAsync<PetFoodListViewModel>($"PetFood/{Id}");
+    }
+    
+    protected async Task OnSave()
+    {
+        HttpResponseMessage response;
+        if (Id == Guid.Empty)
+        {
+            response = await httpClient.PostAsJsonAsync("petFood", PetFoodItem);
+        }
+        else
+        {
+            response = await httpClient.PutAsJsonAsync("petFood", PetFoodItem);
+        }
+        response.EnsureSuccessStatusCode();
+        navManager.NavigateTo("petFoodlist");
+    }
+    
+    protected void OnCancel()
+    {
+        navManager.NavigateTo("petFoodlist");
+    }
+}
