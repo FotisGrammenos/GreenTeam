@@ -5,22 +5,19 @@
 @using Microsoft.AspNetCore.Components;
 @using System.Net.Http.Json;
 @using PetShop.Blazor.Shared;
+@inject NavigationManager navigationManager
 
 <h3>PetFood</h3>
 
 <div class="row">
-<input @bind=NewPetFoodType placeholder="Insert PetFood's type..."/>
-<input type="number" @bind=NewPetFoodCost placeholder="Insert PetFood's cost..."/>
-<input type="number" @bind=NewPetFoodPrice placeholder="Insert PetFood's price..."/>
+    <button class="btn btn-primary w-50 mx-auto" @onclick="AddItem">Add</button>
 </div>
-<button class="btn btn-primary" @onclick="AddItem" >Add</button>
-
-
 @if (isLoading)
 {
     <p>Loading ...</p>
 }
 else{
+
     <table class="table table-striped table-hover">
         <thead>
             <tr>
@@ -34,10 +31,13 @@ else{
             @foreach(var petfood in petFoodLists)
             {
                 <tr>
-                    <td><input value="@petfood.AnimalType" readonly/></td>
-                    <td><input value="@petfood.Cost"readonly/></td>
-                    <td><input value="@petfood.Price"readonly/></td>
-                    <td><button class="btn btn-danger" @onclick="() => DeleteItem(petfood)">Delete</button></td>
+                    <td>@petfood.AnimalType</td>
+                    <td>@petfood.Cost</td>
+                    <td>@petfood.Price</td>
+                    <td>
+                        <button class="btn btn-warning"@onclick="() => EditItem(petfood)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteItem(petfood)">Delete</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -46,9 +46,6 @@ else{
 
 @code {
 
-    private AnimalType NewPetFoodType { get; set; }
-    private string NewPetFoodCost { get; set; }
-    private string NewPetFoodPrice { get; set; }
 
     List<PetFoodListViewModel> petFoodLists = new();
     bool isLoading = true;
@@ -66,30 +63,23 @@ else{
 
     async Task AddItem()
     {
-        if (string.IsNullOrWhiteSpace(NewPetFoodCost) ||
-        string.IsNullOrWhiteSpace(NewPetFoodPrice))
-            return;
-
-        var newCurrent = new PetFoodListViewModel()
-        {
-            AnimalType= NewPetFoodType,
-            Cost=int.Parse(NewPetFoodCost),
-            Price=int.Parse(NewPetFoodPrice)
-        };
-        //NewPetFoodType = null;
-        NewPetFoodCost = null;
-        NewPetFoodPrice = null;
-
-       var tmp = await httpClient.PostAsJsonAsync("petFood", newCurrent); 
-        await LoadItemsFromServer();
+        navigationManager.NavigateTo("/petFoodlist/edit");
     }
 
 
      async Task DeleteItem(PetFoodListViewModel itemToDelete)
     {
+        var confirm = await jsRuntime.InvokeAsync<bool>("confirmDelete", null);
+        if (confirm)
+        {
          var response = await httpClient.DeleteAsync($"petFood/{itemToDelete.Id}");
          response.EnsureSuccessStatusCode();
          await LoadItemsFromServer();
+        }
     }
 
+    async Task EditItem(PetFoodListViewModel petFood)
+    {
+        navigationManager.NavigateTo($"/petFoodlist/edit/{petFood.Id}");
+    }
 }
