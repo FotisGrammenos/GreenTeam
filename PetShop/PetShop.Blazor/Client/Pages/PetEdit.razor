@@ -1,0 +1,86 @@
+﻿@page "/petlist/edit/{Id:guid?}"
+@inject HttpClient httpClient
+@inject NavigationManager navManager
+
+@if (PetItem == null)
+{
+    <p>Loading ...</p>
+}
+else
+{
+    @if (Id == Guid.Empty)
+    {
+        <h3>Add new pet</h3>
+    }
+    else
+    {
+        <h3>Edit @PetItem.Breed</h3>
+    }
+    <div class="row">
+        <div class="col-md-12">
+            <label for="pet-breed">Breed</label>
+            <input name="pet-breed" class="form-control" @bind="@PetItem.Breed" placeholder="Pet Breed" />
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-md-6">
+            <label for="pet-type">Type</label>
+            <input name="pet-type" class="form-control" @bind="@PetItem.Type" placeholder="Pet Type" />
+        </div>
+        <div class="col-md-6">
+            <label for="pet-status">Status</label>
+            <input name="pet-status" class="form-control" @bind="@PetItem.Status" placeholder="Pet Status" />
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-md-6">
+            <label for="pet-cost">Cost</label>
+            <input name="pet-cost" type="number" class="form-control" @bind="@PetItem.Cost" placeholder="Pet Cost" />
+        </div>
+        <div class="col-md-6">
+            <label for="pet-price">Price</label>
+            <input name="pet-price" type="number" class="form-control" @bind="@PetItem.Price" placeholder="Pet Price" />
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <button class="btn btn-success" @onclick="OnSave">Save</button>
+            <button class="btn btn-danger" @onclick="OnCancel">Cancel</button>
+        </div>
+    </div>
+
+}
+@code {
+    [Parameter] public Guid? Id { get; set; }
+    PetEditViewModel PetItem { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id == null)
+        {
+            Id = Guid.Empty;
+        }
+
+        PetItem = await httpClient.GetFromJsonAsync<PetEditViewModel>($"pet/{Id}");
+    }
+    
+    protected async Task OnSave()
+    {
+        HttpResponseMessage response;
+        if (Id == Guid.Empty)
+        {
+            response = await httpClient.PostAsJsonAsync("pet", PetItem);
+        }
+        else
+        {
+            response = await httpClient.PutAsJsonAsync("pet", PetItem);
+        }
+        response.EnsureSuccessStatusCode();
+        navManager.NavigateTo("petlist");
+    }
+    
+    protected void OnCancel()
+    {
+        navManager.NavigateTo("petlist");
+    }
+}

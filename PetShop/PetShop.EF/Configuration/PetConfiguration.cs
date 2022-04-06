@@ -24,7 +24,7 @@ namespace PetShop.EF.Configuration
 
             builder.HasOne(pet => pet.Transaction)
                 .WithOne(transaction => transaction.Pet)
-                .HasForeignKey<Pet>(pet => pet.TransactionID);
+                .HasForeignKey<Pet>(pet => pet.TransactionID).IsRequired(false);
         }
     }
 }
