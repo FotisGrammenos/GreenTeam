@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PetShop.Blazor.Shared
 {
     public class EmployeeListViewModel{
-        public Guid Id;
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
         public string Surname { get; set; }
@@ -18,7 +18,7 @@ namespace PetShop.Blazor.Shared
 
     public class EmployeeEditViewModel
     {
-        public Guid Id;
+        public Guid Id {get; set;}
         public string Name { get; set; }
         public string Surname { get; set; }
         public decimal SallaryPerMonth { get; set; }
