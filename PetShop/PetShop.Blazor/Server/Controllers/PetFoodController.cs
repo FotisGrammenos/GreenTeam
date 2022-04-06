@@ -54,8 +54,13 @@ namespace PetShop.Blazor.Server.Controllers
         {
             var petFoodToUpdate = await _petFoodRepo.GetByIdAsync(petFood.Id);
             if (petFoodToUpdate == null) return NotFound();
-            return Ok();
+            petFoodToUpdate.AnimalType = petFoodToUpdate.AnimalType;
+            petFoodToUpdate.Cost = petFoodToUpdate.Cost;
+            petFoodToUpdate.Price = petFoodToUpdate.Price;
 
+            await _petFoodRepo.AddAsync(petFoodToUpdate);
+
+            return Ok();
         }
     }
 }

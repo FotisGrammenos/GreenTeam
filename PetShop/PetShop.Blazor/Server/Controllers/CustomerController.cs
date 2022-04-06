@@ -28,8 +28,25 @@ namespace PetShop.Blazor.Server.Controllers
                 TIN = x.TIN,
             });
         }
+        [HttpGet("{id}")]
+        public async Task<CustomerEditViewModel> Get(Guid id)
+        {
+            CustomerEditViewModel model = new();
+            if (id != Guid.Empty)
+            {
+                var existing = await _customerRepo.GetByIdAsync(id);
+                model.Id = existing.ID;
+                model.Name = existing.Name;
+                model.Surname = existing.Surname;
+                model.Phone = existing.Phone;
+                model.TIN = existing.TIN;
+               
+            }
+
+            return model;
+        }
         [HttpPost]
-        public async Task Post(CustomerListViewModel customer)
+        public async Task Post(CustomerEditViewModel customer)
         {
             var newCustomer = new Customer(customer.Name,customer.Surname,customer.Phone,customer.TIN);
             
@@ -41,7 +58,7 @@ namespace PetShop.Blazor.Server.Controllers
             await _customerRepo.DeleteAsync(id);
         }
         [HttpPut]
-        public async Task<ActionResult> Put(CustomerListViewModel customer)
+        public async Task<ActionResult> Put(CustomerEditViewModel customer)
         {
             var itemToUpdate = await _customerRepo.GetByIdAsync(customer.Id);
             if (itemToUpdate == null) return NotFound();
