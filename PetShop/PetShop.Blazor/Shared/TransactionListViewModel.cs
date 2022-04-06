@@ -24,9 +24,7 @@ namespace PetShop.Blazor.Shared
         public Guid ID { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public Guid CustomerID { get; set; }
-        public string CustomerName { get; set; }
         public Guid EmployeeID { get; set; }
-        public string EmployeeName { get; set; }
         public Guid PetID { get; set; }
         public decimal PetPrice { get; set; }
         public Guid PetFoodID { get; set; }

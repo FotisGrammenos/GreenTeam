@@ -7,48 +7,55 @@
 @using PetShop.Blazor.Shared;
 <h3>TransactionEdit</h3>
 
-if (PetFoodItem == null)
+@if (TransactionItem == null)
 {
     <p>Loading ...</p>
 }
 else
 {
    <div class="row">
-        <div class="col-md-12">
-            <label for="pet-breed">Breed</label>
-            <input name="pet-breed" class="form-control" @bind="@PetItem.Breed" placeholder="Pet Breed" />
+        <div class="col-md-6">
+            <label for="tr-date">Date</label>
+            <input type="datetime" name="tr-date" class="form-control" @bind="@TransactionItem.Date" />
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-md-4">
+            <label for="tr-employee">Employee</label>
+            <select name="tr-employee" class="form-select" @bind="TransactionEmployee">
+                <option value="@Guid.Empty">Select Employee</option>
+                @foreach (var employee in Employees)
+                {
+                    <option value="@employee.Id">@(employee.Surname + employee.Name)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="tr-customer">Customer</label>
+            <select name="tr-customer" class="form-select" @bind="TransactionCustomer">
+                <option value="@Guid.Empty">Select Customer</option>
+                @foreach (var customer in Customers)
+                {
+                    <option value="@customer.Id">@(customer.Surname + customer.Name)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="tr-pet">Pet</label>
+            <select name="tr-pet" class="form-select" @bind="TransactionPet">
+                <option value="@Guid.Empty">Select Pet</option>
+                @foreach (var pet in Pets.Where(pet => pet.Status == Model.PetStatus.OK ||
+                                                        pet.Status == Model.PetStatus.Recovering))
+                {
+                    <option value="@pet.Id">@pet.Breed</option>
+                }
+            </select>
         </div>
     </div>
     <div class="row mt-1">
         <div class="col-md-6">
-            <label for="pet-type">Type</label>
-            <select name="pet-type" class="form-select" @bind="PetType">
-                <option value="-1">Select Pet Type</option>
-                @foreach (var item in Enum.GetValues(typeof(AnimalType)))
-                {
-                    <option value="@((int)item)">@item.ToString()</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label for="pet-status">Status</label>
-            <select name="pet-status" class="form-select" @bind="PetStatus">
-                <option value="-1">Select Pet Status</option>
-                @foreach (var item in Enum.GetValues(typeof(PetStatus)))
-                {
-                    <option value="@((int)item)">@item.ToString()</option>
-                }
-            </select>
-        </div>
-    </div>
-    <div class="row mt-1">
-        <div class="col-md-6">
-            <label for="pet-cost">Cost</label>
-            <input name="pet-cost" type="number" class="form-control" @bind="@PetItem.Cost" placeholder="Pet Cost" />
-        </div>
-        <div class="col-md-6">
-            <label for="pet-price">Price</label>
-            <input name="pet-price" type="number" class="form-control" @bind="@PetItem.Price" placeholder="Pet Price" />
+            <label for="tr-foodqty">Quantity</label>
+            <input name="tr-foodqty" type="number" class="form-control" @bind="@TransactionItem.PetFoodQty" placeholder="Pet Cost" min=1/>
         </div>
     </div>
     <div class="row mt-2">
@@ -60,13 +67,57 @@ else
 
 }
 
-
-
-
-
-
-
-
 @code {
+    [Parameter] public Guid? Id { get; set; }
+    TransactionEditViewModel TransactionItem { get; set; }
+    private Guid TransactionCustomer { get; set; } = Guid.Empty;
+    private Guid TransactionEmployee { get; set; } = Guid.Empty;
+    private Guid TransactionPet { get; set; } = Guid.Empty;
+    private List<CustomerListViewModel>? Customers { get; set; } = new();
+    private List<EmployeeListViewModel>? Employees { get; set; } = new();
+    private List<PetListViewModel>? Pets { get; set; } = new();
+    private List<PetFoodListViewModel>? Foods { get; set; } = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+
+        Pets = await httpClient.GetFromJsonAsync<List<PetListViewModel>>("pet");
+        Employees = await httpClient.GetFromJsonAsync<List<EmployeeListViewModel>>("employee");
+        Customers = await httpClient.GetFromJsonAsync<List<CustomerListViewModel>>("customer");
+
+        if (Id == null)
+        {
+            Id = Guid.Empty;
+        }
+
+        TransactionItem = await httpClient.GetFromJsonAsync<TransactionEditViewModel>($"Transaction/{Id}");
+    }
+
+    protected async Task OnSave()
+    {
+        HttpResponseMessage response;
+        if (Id == Guid.Empty)
+        {
+            Foods = await httpClient.GetFromJsonAsync<List<PetFoodListViewModel>>("PetFood");
+            var pet = Pets.SingleOrDefault(pet => pet.Id == TransactionPet);
+            var petFood = Foods.SingleOrDefault(food => food.AnimalType == pet.Type);
+            TransactionItem.PetFoodPrice = petFood.Price * (TransactionItem.PetFoodQty - 1);
+            TransactionItem.TotalPrice = TransactionItem.PetFoodPrice + pet.Price;
+            TransactionItem.PetPrice = pet.Price;
+            TransactionItem.CustomerID = TransactionCustomer;
+            TransactionItem.EmployeeID = TransactionEmployee;
+            TransactionItem.PetID = TransactionPet;
+            TransactionItem.PetFoodID = petFood.Id;
+
+            response = await httpClient.PostAsJsonAsync("transaction", TransactionItem);
+            response.EnsureSuccessStatusCode();
+        }
+
+        navigationManager.NavigateTo("transactionlist");
+    }
+
+    protected void OnCancel()
+    {
+        navigationManager.NavigateTo("transactionlist");
+    }
 }

@@ -28,8 +28,10 @@ namespace PetShop.Blazor.Server.Controllers
                 PetFoodQty = x.PetFoodQty,
                 PetFoodPrice = x.PetFood.Price,
                 TotalPrice = x.TotalPrice,
+                Breed = x.Pet.Breed
             });
         }
+        [HttpGet("{id}")]
         public async Task<TransactionEditViewModel> Get(Guid id)
         {
             TransactionEditViewModel model = new();
@@ -38,8 +40,6 @@ namespace PetShop.Blazor.Server.Controllers
                 var existing = await _transactionRepo.GetByIdAsync(id);
                 model.ID = existing.ID;
                 model.Date = existing.Date;
-                model.CustomerName = existing.Customer.Name + existing.Customer.Surname;
-                model.EmployeeName = existing.Employee.Name + existing.Customer.Surname;
                 model.PetPrice = existing.Pet.Price;
                 model.PetFoodQty = existing.PetFoodQty;
                 model.PetFoodPrice = existing.PetFood.Price;
