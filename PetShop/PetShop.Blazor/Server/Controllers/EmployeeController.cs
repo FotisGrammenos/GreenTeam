@@ -29,8 +29,25 @@ namespace PetShop.Blazor.Server.Controllers
             });
 
         }
-        [HttpPost]
-        public async Task Post(EmployeeListViewModel employee)
+        [HttpGet("{id}")]
+        public async Task<EmployeeEditViewModel> Get(Guid id)
+        {
+            EmployeeEditViewModel model = new();
+            if (id != Guid.Empty)
+            {
+                var existing = await _employeeRepo.GetByIdAsync(id);
+                model.Id = existing.ID;
+                model.Name = existing.Name;
+                model.Surname = existing.Surname;
+                model.SallaryPerMonth = existing.SallaryPerMonth;
+                model.EmployeeType = existing.EmployeeType;
+
+            }
+
+            return model;
+        }
+            [HttpPost]
+        public async Task Post(EmployeeEditViewModel employee)
         {
             var newEmployee = new Employee(employee.Name, employee.Surname, employee.SallaryPerMonth, employee.EmployeeType);
             await _employeeRepo.AddAsync(newEmployee);

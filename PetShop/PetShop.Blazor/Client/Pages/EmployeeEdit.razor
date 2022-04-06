@@ -1,14 +1,39 @@
-﻿@page "/employee/edit/{Id:guid?}"
+﻿@page "/employeeList/edit/{Id:guid?}"
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
 
-<h3>Employe Edit</h3>
-@if( true)
+<h3>Employee Edit</h3>
+@if( employeeItem == null)
 {
     <p>Loading ...</p>
 }
 else
 {
+     <div class="row">
+        <div class="col-md-3">
+            <label class="form-label">Name</label>
+            <input class="form-control" @bind="@employeeItem.Name" />
+        </div>
+        <div class="col-md-3">
+                <label class="form-label">Surname</label>
+                <input class="form-control" @bind="@employeeItem.Surname" />
+        </div>
+        <div class="col-md-3">
+                <label class="form-label">Salary</label>
+                <input class="form-control" @bind="@employeeItem.SallaryPerMonth" />
+        </div> 
+        <div class="col-md-3">
+                <label class="form-label">Type</label>
+                <input class="form-control" @bind="@employeeItem.EmployeeType" />
+        </div> 
+        
+    </div> 
+    <div class="row mt-2">
+        <div class="col">
+            <button class="btn btn-success" @onclick="OnSave">Save</button>
+            <button class="btn btn-danger" @onclick="OnCancel">Cancel</button>
+        </div>
+    </div>
     
 }
 @code {
@@ -17,6 +42,29 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        employeeItem = await httpClient.GetFromJsonAsync<EmployeeEditViewModel>($"employee/{(Id == null ? 0 : Id)}");
+         if (Id == null)
+        {
+            Id = Guid.Empty;
+        }
+        employeeItem = await httpClient.GetFromJsonAsync<EmployeeEditViewModel>($"employee/{Id}");
     }
+    protected async Task OnSave()
+    {
+        HttpResponseMessage response;
+        if (Id == Guid.Empty)
+        {
+            response = await httpClient.PostAsJsonAsync("Employee", employeeItem);
+        }
+        else
+        {
+            response = await httpClient.PutAsJsonAsync("Employee", employeeItem);
+        }
+        response.EnsureSuccessStatusCode();
+        navigationManager.NavigateTo("employeeList");
+    }
+    protected void OnCancel()
+    {
+        navigationManager.NavigateTo("employeeList");
+    }
+
 }

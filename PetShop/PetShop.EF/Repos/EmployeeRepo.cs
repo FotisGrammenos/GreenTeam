@@ -24,7 +24,7 @@ namespace PetShop.EF.Repos
 
         public async Task DeleteAsync(Guid id)
         {
-            DeleteLogic(id, context);
+            DeleteLogic(id);
             await context.SaveChangesAsync();
         }
 
@@ -50,7 +50,7 @@ namespace PetShop.EF.Repos
 
             context.Employees.Add(entity);
         }
-        private void DeleteLogic(Guid id, PetShopContext context)
+        private void DeleteLogic(Guid id)
         {
             var currentEmployee = context.Employees.SingleOrDefault(employee => employee.ID == id);
             if (currentEmployee is null)
