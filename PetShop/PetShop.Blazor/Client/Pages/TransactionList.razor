@@ -1,4 +1,4 @@
-﻿@*@page "/transactionlist"
+﻿@page "/transactionlist"
 @inject HttpClient httpClient
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navigationManager
@@ -39,7 +39,6 @@ else
                     <td>@transaction.PetFoodQty</td>
                     <td>@transaction.TotalPrice</td>
                     <td>
-                    <button class="btn btn-primary" @onclick="() => EditItem(transaction)">Edit</button>
                     <button class="btn btn-danger" @onclick="() => DeleteItem(transaction)">Delete</button>
                     </td>
                 </tr>
@@ -67,11 +66,11 @@ else
     }
     async Task EditItem(TransactionListViewModel itemToEdit)
     {
-     navigationManager.NavigateTo($"/transactionlist/edit/{itemToEdit.Id}"); 
+     navigationManager.NavigateTo($"/transactionlist/edit/{itemToEdit.ID}"); 
     }
     async Task DeleteItem(TransactionListViewModel itemToDelete)
     {
-     var response = await httpClient.DeleteAsync($"transaction/{itemToDelete.Id}");
+     var response = await httpClient.DeleteAsync($"transaction/{itemToDelete.ID}");
      response.EnsureSuccessStatusCode();
      await LoadItemsFromServer();    
     }
@@ -79,4 +78,3 @@ else
 
 
 }
-*@

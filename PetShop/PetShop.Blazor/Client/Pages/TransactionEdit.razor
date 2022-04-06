@@ -1,0 +1,72 @@
+﻿@page "/transactionlist/edit/{Id:guid?}"
+@inject HttpClient httpClient
+@inject IJSRuntime jsRuntime
+@inject NavigationManager navigationManager
+@using Microsoft.AspNetCore.Components;
+@using System.Net.Http.Json;
+@using PetShop.Blazor.Shared;
+<h3>TransactionEdit</h3>
+
+if (PetFoodItem == null)
+{
+    <p>Loading ...</p>
+}
+else
+{
+   <div class="row">
+        <div class="col-md-12">
+            <label for="pet-breed">Breed</label>
+            <input name="pet-breed" class="form-control" @bind="@PetItem.Breed" placeholder="Pet Breed" />
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-md-6">
+            <label for="pet-type">Type</label>
+            <select name="pet-type" class="form-select" @bind="PetType">
+                <option value="-1">Select Pet Type</option>
+                @foreach (var item in Enum.GetValues(typeof(AnimalType)))
+                {
+                    <option value="@((int)item)">@item.ToString()</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="pet-status">Status</label>
+            <select name="pet-status" class="form-select" @bind="PetStatus">
+                <option value="-1">Select Pet Status</option>
+                @foreach (var item in Enum.GetValues(typeof(PetStatus)))
+                {
+                    <option value="@((int)item)">@item.ToString()</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-md-6">
+            <label for="pet-cost">Cost</label>
+            <input name="pet-cost" type="number" class="form-control" @bind="@PetItem.Cost" placeholder="Pet Cost" />
+        </div>
+        <div class="col-md-6">
+            <label for="pet-price">Price</label>
+            <input name="pet-price" type="number" class="form-control" @bind="@PetItem.Price" placeholder="Pet Price" />
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <button class="btn btn-success" @onclick="OnSave">Save</button>
+            <button class="btn btn-danger" @onclick="OnCancel">Cancel</button>
+        </div>
+    </div>
+
+}
+
+
+
+
+
+
+
+
+@code {
+
+}
