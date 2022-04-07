@@ -41,15 +41,15 @@ namespace PetShop.Blazor.Server.Controllers
         [HttpPost]
         public async Task Post(PetReportViewModel petReport)
         {
-            var count = Enum.GetValues(typeof(AnimalType));
-            foreach(var type in count)
+            var animalTypes = Enum.GetValues(typeof(AnimalType));
+            foreach(var item in animalTypes)
             {
                 var newPetReport = new PetReport()
                 {
 
                     Month = DateTime.Now.Month.ToString(),
                     Year = DateTime.Now.Year.ToString(),
-                    AnimalType = (AnimalType) type                   
+                    AnimalType = (AnimalType)item                   
                 };
                 newPetReport.TotalSold = await GetTotal(newPetReport.Year,newPetReport.Month, newPetReport.AnimalType);
                 await _petReportRepo.AddAsync(newPetReport);
@@ -68,7 +68,7 @@ namespace PetShop.Blazor.Server.Controllers
             if (itemsToUpdate == null) return NotFound();
             foreach(var item in itemsToUpdate)
             {
-                item.TotalSold = await GetTotal(item.Month,item.Year,item.AnimalType);
+                item.TotalSold = await GetTotal(item.Year, item.Month, item.AnimalType);
                 await _petReportRepo.UpdateAsync(item.ID, item);
             }
           
@@ -85,9 +85,10 @@ namespace PetShop.Blazor.Server.Controllers
         {
             var counter = 0;
             var transactionList = await _transactionRepo.GetAllAsync();
-            foreach(var transaction in transactionList.Where(tr=>tr.Date.Month.ToString() == month && tr.Date.Year.ToString() == year ))
+            foreach (var trans in transactionList.Where(tr => tr.Date.Year.ToString() == year &&
+                                                              tr.Date.Month.ToString() == month))
             {
-                if( transaction.Pet.AnimalType == animalType)
+                if( trans.Pet.AnimalType == animalType)
                     counter++;
             }
             return counter;

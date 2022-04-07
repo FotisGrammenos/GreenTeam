@@ -8,10 +8,10 @@
 
 <PageTitle>Kahoots Pets - Customers</PageTitle>
 
-<h3>Customers </h3>  
+<h3>Customers </h3>
 <div class=row>
- 
-<button class="btn btn-primary w-25" @onclick="AddItem" >Add</button>
+
+    <button class="btn btn-primary w-25" @onclick="AddItem">Add</button>
 
 </div>
 @if (isLoading)
@@ -20,31 +20,33 @@
 }
 else
 {
-   <table class="table table-striped table-hover ">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Phone</th>
-                <th>TIN</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var customer in customerList)
-            {
+    <div class="table-responsive-md">
+        <table class="table table-hover">
+            <thead>
                 <tr>
-                    <td>@customer.Name</td>
-                    <td>@customer.Surname</td>
-                    <td>@customer.Phone</td>
-                    <td>@customer.TIN</td>
-                    <td>
-                    <button class="btn btn-warning" @onclick="() => EditItem(customer)">Edit</button>
-                    <button class="btn btn-danger" @onclick="() => DeleteItem(customer)">Delete</button>
-                    </td>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Phone</th>
+                    <th>TIN</th>
                 </tr>
-            }
-        </tbody>
-    </table> 
+            </thead>
+            <tbody>
+                @foreach (var customer in customerList)
+                {
+                    <tr>
+                        <td>@customer.Name</td>
+                        <td>@customer.Surname</td>
+                        <td>@customer.Phone</td>
+                        <td>@customer.TIN</td>
+                        <td>
+                            <button class="btn btn-warning text-primary" @onclick="() => EditItem(customer)">Edit</button>
+                            <button class="btn btn-danger text-primary" @onclick="() => DeleteItem(customer)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
 @code {
@@ -53,31 +55,31 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-     await LoadItemsFromServer();
-     isLoading = false;
+        await LoadItemsFromServer();
+        isLoading = false;
     }
 
     private async Task LoadItemsFromServer()
     {
-     customerList = await httpClient.GetFromJsonAsync<List<CustomerListViewModel>>("customer");
+        customerList = await httpClient.GetFromJsonAsync<List<CustomerListViewModel>>("customer");
     }
 
     async Task AddItem()
     {
-     navigationManager.NavigateTo("/customerlist/edit");
+        navigationManager.NavigateTo("/customerlist/edit");
     }
     async Task EditItem(CustomerListViewModel itemToEdit)
     {
-     navigationManager.NavigateTo($"/customerlist/edit/{itemToEdit.Id}"); 
+        navigationManager.NavigateTo($"/customerlist/edit/{itemToEdit.Id}");
     }
     async Task DeleteItem(CustomerListViewModel itemToDelete)
     {
-     var response = await httpClient.DeleteAsync($"customer/{itemToDelete.Id}");
-     response.EnsureSuccessStatusCode();
-     await LoadItemsFromServer();    
+        var response = await httpClient.DeleteAsync($"customer/{itemToDelete.Id}");
+        response.EnsureSuccessStatusCode();
+        await LoadItemsFromServer();
     }
 
 
-    
 
-}    
+
+}

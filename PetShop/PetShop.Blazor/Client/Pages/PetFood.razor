@@ -12,40 +12,42 @@
 <h3>Foods</h3>
 
 <div class=row>
- 
-<button class="btn btn-primary w-25" @onclick="AddItem" >Add</button>
+
+    <button class="btn btn-primary w-25" @onclick="AddItem">Add</button>
 
 </div>
 @if (isLoading)
 {
     <p>Loading ...</p>
 }
-else{
-
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>AnimalType</th>
-                <th>Cost</th>
-                <th>Price</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var petfood in petFoodLists)
-            {
+else
+{
+    <div class="table-responsive-md">
+        <table class="table table-striped table-hover">
+            <thead>
                 <tr>
-                    <td>@petfood.AnimalType</td>
-                    <td>@petfood.Cost</td>
-                    <td>@petfood.Price</td>
-                    <td>
-                        <button class="btn btn-warning"@onclick="() => EditItem(petfood)">Edit</button>
-                        <button class="btn btn-danger" @onclick="() => DeleteItem(petfood)">Delete</button>
-                    </td>
+                    <th>Type of Animal</th>
+                    <th>Cost</th>
+                    <th>Price</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var petfood in petFoodLists)
+                {
+                    <tr>
+                        <td>@petfood.AnimalType</td>
+                        <td>@petfood.Cost</td>
+                        <td>@petfood.Price</td>
+                        <td>
+                            <button class="btn btn-warning text-primary" @onclick="() => EditItem(petfood)">Edit</button>
+                            <button class="btn btn-danger text-primary" @onclick="() => DeleteItem(petfood)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
 @code {
@@ -62,7 +64,7 @@ else{
 
     private async Task LoadItemsFromServer()
     {
-        petFoodLists= await httpClient.GetFromJsonAsync<List<PetFoodListViewModel>>("petFood");
+        petFoodLists = await httpClient.GetFromJsonAsync<List<PetFoodListViewModel>>("petFood");
     }
 
     async Task AddItem()
@@ -71,14 +73,14 @@ else{
     }
 
 
-     async Task DeleteItem(PetFoodListViewModel itemToDelete)
+    async Task DeleteItem(PetFoodListViewModel itemToDelete)
     {
         var confirm = await jsRuntime.InvokeAsync<bool>("confirmDelete", null);
         if (confirm)
         {
-         var response = await httpClient.DeleteAsync($"petFood/{itemToDelete.Id}");
-         response.EnsureSuccessStatusCode();
-         await LoadItemsFromServer();
+            var response = await httpClient.DeleteAsync($"petFood/{itemToDelete.Id}");
+            response.EnsureSuccessStatusCode();
+            await LoadItemsFromServer();
         }
     }
 

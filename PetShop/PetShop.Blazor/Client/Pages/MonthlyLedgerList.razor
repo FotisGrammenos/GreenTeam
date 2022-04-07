@@ -12,8 +12,8 @@
 
 <h3>Monthly Ledgers</h3>
 <div class=row>
- 
-<button class="btn btn-primary w-25" @onclick="AddItem" >Create Ledger</button>
+
+    <button class="btn btn-primary w-25" @onclick="AddItem">Create Ledger</button>
 
 </div>
 @if (isLoading)
@@ -23,11 +23,11 @@
 else
 {
     <div class=" table-responsive-md">
-        <table class="table table-striped table-hover">
+        <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>Month</th>
                     <th>Year</th>
+                    <th>Month</th>
                     <th>Income</th>
                     <th>Expenses</th>
                     <th>Total</th>
@@ -37,8 +37,8 @@ else
                 @foreach (var month in monthlyLedgerLists)
                 {
                     <tr>
-                        <td>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(int.Parse(month.Month))</td>
                         <td>@month.Year</td>
+                        <td>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(int.Parse(month.Month))</td>
                         <td>@month.Income</td>
                         <td>@month.Expenses</td>
                         <td>@month.Total</td>
@@ -49,10 +49,10 @@ else
     </div>
 }
 @code {
-    List<MonthlyLedgerListViewMondel> monthlyLedgerLists=new();
+    List<MonthlyLedgerListViewMondel> monthlyLedgerLists = new();
     MonthlyLedger currMonthlyLedger { get; set; } = new();
     bool isLoading = true;
-   
+
     protected override async Task OnInitializedAsync()
     {
         await LoadItemsFromServer();
@@ -69,7 +69,7 @@ else
         HttpResponseMessage response;
         currMonthlyLedger.Month = DateTime.Now.Month.ToString();
         currMonthlyLedger.Year = DateTime.Now.Year.ToString();
-        if (!MonthlyLedgerExist(currMonthlyLedger.Month,currMonthlyLedger.Year))
+        if (!MonthlyLedgerExist(currMonthlyLedger.Month, currMonthlyLedger.Year))
         {
             response = await httpClient.PostAsJsonAsync("monthlyLedger", currMonthlyLedger);
         }
