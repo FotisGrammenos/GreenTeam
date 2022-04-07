@@ -13,7 +13,7 @@
 }
 else
 {
-   <div class="row">
+    <div class="row">
         <div class="col-md-6">
             <label for="tr-date">Date</label>
             <input type="datetime" name="tr-date" class="form-control" @bind="@TransactionItem.Date" />
@@ -45,7 +45,7 @@ else
             <select name="tr-pet" class="form-select" @bind="TransactionPet">
                 <option value="@Guid.Empty">Select Pet</option>
                 @foreach (var pet in Pets.Where(pet => pet.Status == Model.PetStatus.OK ||
-                                                        pet.Status == Model.PetStatus.Recovering))
+               pet.Status == Model.PetStatus.Recovering))
                 {
                     <option value="@pet.Id">@pet.Breed</option>
                 }
@@ -55,7 +55,7 @@ else
     <div class="row mt-1">
         <div class="col-md-6">
             <label for="tr-foodqty">Quantity</label>
-            <input name="tr-foodqty" type="number" class="form-control" @bind="@TransactionItem.PetFoodQty" placeholder="Pet Cost" min=1/>
+            <input name="tr-foodqty" type="number" class="form-control" @bind="@TransactionItem.PetFoodQty" placeholder="Pet Cost" min=1 />
         </div>
     </div>
     <div class="row mt-2">
@@ -95,6 +95,12 @@ else
 
     protected async Task OnSave()
     {
+        if (TransactionCustomer == Guid.Empty ||
+            TransactionEmployee == Guid.Empty ||
+            TransactionPet == Guid.Empty ||
+            TransactionItem.Date == null ||
+            TransactionItem.PetFoodQty == 0)
+            return;
         HttpResponseMessage response;
         if (Id == Guid.Empty)
         {

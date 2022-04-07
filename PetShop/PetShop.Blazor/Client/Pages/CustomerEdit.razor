@@ -55,6 +55,11 @@ else
     }
     protected async Task OnSave()
     {
+        if (string.IsNullOrEmpty(CustomerItem.Name) ||
+            string.IsNullOrEmpty(CustomerItem.Surname) ||
+            string.IsNullOrEmpty(CustomerItem.Phone) ||
+            string.IsNullOrEmpty(CustomerItem.TIN))
+            return;
         HttpResponseMessage response;
         if (Id == Guid.Empty)
         {

@@ -64,6 +64,11 @@ else
 
     protected async Task OnSave()
     {
+        if (PetFoodType == -1 ||
+            PetFoodItem.Price == 0 ||
+            PetFoodItem.Cost == 0)
+            return;
+
         HttpResponseMessage response;
         PetFoodItem.AnimalType = (AnimalType)PetFoodType;
         if (Id == Guid.Empty)
