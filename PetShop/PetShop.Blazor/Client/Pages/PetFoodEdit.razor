@@ -1,4 +1,5 @@
 ﻿@page "/petFoodlist/edit/{Id:guid?}"
+@using PetShop.Model
 @inject HttpClient httpClient
 @inject NavigationManager navManager
 
@@ -17,9 +18,15 @@ else
         <h3>Edit Pet Food</h3>
     }
     <div class="row">
-        <div class="col-md-12">
-            <label for="orm-label">Animal Type</label>
-            <input class="form-control" @bind="@PetFoodItem.AnimalType" placeholder="Pet Food AnimalType" />
+        <div class="col-md-6">
+            <label for="petfood-type">Type</label>
+            <select name="petfood-type" class="form-select" @bind="PetFoodType">
+                <option value="-1">Select Pet Food Type</option>
+                @foreach (var item in Enum.GetValues(typeof(AnimalType)))
+                {
+                    <option value="@((int)item)">@item.ToString()</option>
+                }
+            </select>
         </div>
     </div>
     <div class="row mt-1">
@@ -43,6 +50,7 @@ else
 @code {
     [Parameter] public Guid? Id { get; set; }
     PetFoodListViewModel PetFoodItem { get; set; }
+    private int PetFoodType { get; set; } = -1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,10 +61,11 @@ else
 
         PetFoodItem = await httpClient.GetFromJsonAsync<PetFoodListViewModel>($"PetFood/{Id}");
     }
-    
+
     protected async Task OnSave()
     {
         HttpResponseMessage response;
+        PetFoodItem.AnimalType = (AnimalType)PetFoodType;
         if (Id == Guid.Empty)
         {
             response = await httpClient.PostAsJsonAsync("petFood", PetFoodItem);

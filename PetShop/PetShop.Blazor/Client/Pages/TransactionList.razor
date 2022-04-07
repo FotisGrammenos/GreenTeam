@@ -8,7 +8,11 @@
 
 <h3>TransactionList</h3>
 
-<button class="btn btn-primary" @onclick="AddItem" >Add</button>
+<div class=row>
+ 
+<button class="btn btn-primary w-25" @onclick="AddItem" >Add</button>
+
+</div>
 @if (isLoading)
 {
     <p> Loading...</p>

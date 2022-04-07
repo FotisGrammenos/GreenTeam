@@ -1,6 +1,7 @@
 ﻿@page "/employeeList/edit/{Id:guid?}"
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
+@using PetShop.Model
 
 <h3>Employee Edit</h3>
 @if( employeeItem == null)
@@ -9,24 +10,31 @@
 }
 else
 {
-     <div class="row">
-        <div class="col-md-3">
-            <label class="form-label">Name</label>
-            <input class="form-control" @bind="@employeeItem.Name" />
+    <div class="row">
+        <div class="col-md-6">
+            <label for="employee-name">Name</label>
+            <input name="employee-name" class="form-control" @bind="@employeeItem.Name" placeholder="Employee Name" />
         </div>
-        <div class="col-md-3">
-                <label class="form-label">Surname</label>
-                <input class="form-control" @bind="@employeeItem.Surname" />
+         <div class="col-md-6">
+                <label for="employee-surname">Surname</label>
+                <input name="employee-surname" class="form-control" @bind="@employeeItem.Surname" placeholder="Employee Surname" />
         </div>
-        <div class="col-md-3">
-                <label class="form-label">Salary</label>
-                <input class="form-control" @bind="@employeeItem.SallaryPerMonth" />
-        </div> 
-        <div class="col-md-3">
-                <label class="form-label">Type</label>
-                <input class="form-control" @bind="@employeeItem.EmployeeType" />
-        </div> 
-        
+    </div>
+    <div class="row-md-1">
+            <div class="col-md-6">
+                <label for="employee-salary">Sallary</label>
+                <input name="employee-salary" type="number" class="form-control" @bind="@employeeItem.SallaryPerMonth" placeholder="Employee Sallary" />
+            </div> 
+            <div class="col-md-6">
+            <label for="employee-type">Type</label>
+                     <select name="employee-type" class="form-select" @bind="EmploteeType">
+                     <option value="-1">Select Employee Type</option>
+                     @foreach (var item in Enum.GetValues(typeof(EmployeeType)))
+                     {
+                         <option value="@((int)item)">@item.ToString()</option>
+                     }
+                     </select>
+            </div>
     </div> 
     <div class="row mt-2">
         <div class="col">
@@ -39,10 +47,11 @@ else
 @code {
     [Parameter] public Guid? Id { get; set; }
     EmployeeEditViewModel employeeItem { get; set; }
+    private int EmploteeType { get; set; } = -1;
 
     protected override async Task OnInitializedAsync()
     {
-         if (Id == null)
+        if (Id == null)
         {
             Id = Guid.Empty;
         }
@@ -51,6 +60,7 @@ else
     protected async Task OnSave()
     {
         HttpResponseMessage response;
+        employeeItem.EmployeeType = (EmployeeType)EmploteeType;
         if (Id == Guid.Empty)
         {
             response = await httpClient.PostAsJsonAsync("Employee", employeeItem);
