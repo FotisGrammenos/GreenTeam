@@ -48,6 +48,7 @@ namespace PetShop.Blazor.Server.Controllers
 
             return model;
         }
+
         [HttpPost]
         public async Task Post(TransactionEditViewModel transaction)
         {

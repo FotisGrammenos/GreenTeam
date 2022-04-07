@@ -36,7 +36,8 @@ namespace PetShop.EF.Repos
 
         public async Task UpdateAsync(Guid id, MonthlyLedger entity)
         {
-            throw new NotImplementedException();
+            UpdateLogic(id, entity, context);
+            await context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Guid id)
@@ -62,6 +63,18 @@ namespace PetShop.EF.Repos
                 throw new KeyNotFoundException($"Given id '{id}' was not found in database");
 
             context.MonthlyLedgers.Remove(ledger);
+        }
+
+        private void UpdateLogic(Guid id, MonthlyLedger entity, PetShopContext context)
+        {
+            var currentMonthlyLedger = context.MonthlyLedgers.SingleOrDefault(monthly => monthly.ID == id);
+            if (currentMonthlyLedger is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
+            currentMonthlyLedger.Month = entity.Month;
+            currentMonthlyLedger.Year = entity.Year;
+            currentMonthlyLedger.Income = entity.Income;
+            currentMonthlyLedger.Expenses = entity.Expenses;
+            currentMonthlyLedger.Total = entity.Total;
         }
     }
 }
