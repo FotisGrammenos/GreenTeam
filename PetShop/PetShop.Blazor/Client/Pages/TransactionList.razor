@@ -9,8 +9,8 @@
 <h3>TransactionList</h3>
 
 <div class=row>
- 
-<button class="btn btn-primary w-25" @onclick="AddItem" >Add</button>
+
+    <button class="btn btn-primary w-25" @onclick="AddItem">Add</button>
 
 </div>
 @if (isLoading)
@@ -19,36 +19,40 @@
 }
 else
 {
-   <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Customer</th>
-                <th>Employee</th>
-                <th>Breed</th>
-                <th>Pet Price</th>
-                <th>Pet Food Price</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var transaction in transactionList)
-            {
+    <div class="table-responsive-sm">
+        <table class="table table-striped table-hover">
+            <thead>
                 <tr>
-                    <td>@transaction.CustomerName</td>
-                    <td>@transaction.EmployeeName</td>
-                    <td>@transaction.Breed</td>
-                    <td>@transaction.PetPrice</td>
-                    <td>@transaction.PetFoodPrice</td>
-                    <td>@transaction.PetFoodQty</td>
-                    <td>@transaction.TotalPrice</td>
-                    <td>
-                    <button class="btn btn-danger" @onclick="() => DeleteItem(transaction)">Delete</button>
-                    </td>
+                    <th>Date</th>
+                    <th>Employee</th>
+                    <th>Customer</th>
+                    <th>Breed</th>
+                    <th>Pet Price</th>
+                    <th>Pet Food Price</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
                 </tr>
-            }
-        </tbody>
-    </table> 
+            </thead>
+            <tbody>
+                @foreach (var transaction in transactionList)
+                {
+                    <tr>
+                        <td>@transaction.Date</td>
+                        <td>@transaction.EmployeeName</td>
+                        <td>@transaction.CustomerName</td>
+                        <td>@transaction.Breed</td>
+                        <td>@transaction.PetPrice</td>
+                        <td>@transaction.PetFoodPrice</td>
+                        <td>@transaction.PetFoodQty</td>
+                        <td>@transaction.TotalPrice</td>
+                        <td>
+                            <button class="btn btn-danger" @onclick="() => DeleteItem(transaction)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
 
 }
@@ -57,26 +61,26 @@ else
     bool isLoading = true;
     protected override async Task OnInitializedAsync()
     {
-     await LoadItemsFromServer();
-     isLoading = false;
+        await LoadItemsFromServer();
+        isLoading = false;
     }
     private async Task LoadItemsFromServer()
     {
-     transactionList = await httpClient.GetFromJsonAsync<List<TransactionListViewModel>>("transaction");
+        transactionList = await httpClient.GetFromJsonAsync<List<TransactionListViewModel>>("transaction");
     }
     async Task AddItem()
     {
-     navigationManager.NavigateTo("/transactionlist/edit");
+        navigationManager.NavigateTo("/transactionlist/edit");
     }
     async Task EditItem(TransactionListViewModel itemToEdit)
     {
-     navigationManager.NavigateTo($"/transactionlist/edit/{itemToEdit.ID}"); 
+        navigationManager.NavigateTo($"/transactionlist/edit/{itemToEdit.ID}");
     }
     async Task DeleteItem(TransactionListViewModel itemToDelete)
     {
-     var response = await httpClient.DeleteAsync($"transaction/{itemToDelete.ID}");
-     response.EnsureSuccessStatusCode();
-     await LoadItemsFromServer();    
+        var response = await httpClient.DeleteAsync($"transaction/{itemToDelete.ID}");
+        response.EnsureSuccessStatusCode();
+        await LoadItemsFromServer();
     }
 
 
