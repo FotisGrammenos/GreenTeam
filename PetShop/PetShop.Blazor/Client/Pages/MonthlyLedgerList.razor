@@ -31,7 +31,6 @@ else
                     <th>Income</th>
                     <th>Expenses</th>
                     <th>Total</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -43,12 +42,6 @@ else
                         <td>@month.Income</td>
                         <td>@month.Expenses</td>
                         <td>@month.Total</td>
-                        <td>
-                            <div class="btn-group">
-                                
-                                <button class="btn btn-danger btn-sm" @onclick="() => DeleteItem(month)">Delete</button>
-                            </div>
-                        </td>
                     </tr>
                 }
             </tbody>

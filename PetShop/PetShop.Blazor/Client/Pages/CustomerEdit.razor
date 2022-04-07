@@ -4,14 +4,20 @@
 
 <PageTitle>Kahoots Pets - Customer</PageTitle>
 
-<h3>Customer Edit</h3>
-
 @if (CustomerItem == null)
 {
     <p>Loading ...</p>
 }
 else
 {
+    @if (Id == Guid.Empty)
+    {
+        <h2>Add new customer</h2>
+    }
+    else
+    {
+        <h2>Edit @($"{CustomerItem.Surname} {CustomerItem.Name}")</h2>
+    }
    <div class="row">
         <div class="col-md-3">
             <label class="form-label">Name</label>

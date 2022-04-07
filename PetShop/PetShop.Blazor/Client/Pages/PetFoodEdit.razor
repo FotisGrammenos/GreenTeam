@@ -13,11 +13,11 @@ else
 {
     @if (Id == Guid.Empty)
     {
-        <h3>Add new pet</h3>
+        <h2>Add new food</h2>
     }
     else
     {
-        <h3>Edit Pet Food</h3>
+        <h2>Edit @($"{Enum.GetName(typeof(AnimalType), PetFoodItem.AnimalType).ToLower()}'s food")</h2>
     }
     <div class="row">
         <div class="col-md-6">

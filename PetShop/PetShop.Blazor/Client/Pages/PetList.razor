@@ -12,8 +12,8 @@
 <h3>Pets</h3>
 
 <div class=row>
- 
-<button class="btn btn-primary w-25" @onclick="AddItem" >Add</button>
+
+    <button class="btn btn-primary w-25" @onclick="AddItem">Add</button>
 
 </div>
 @if (isLoading)
@@ -44,10 +44,8 @@ else
                         <td>@pet.Cost</td>
                         <td>@pet.Price</td>
                         <td>
-                            <div class="btn-group">
-                                <button class="btn btn-warning btn-sm" @onclick="() => EditItem(pet)">Edit</button>
-                                <button class="btn btn-danger btn-sm" @onclick="() => DeleteItem(pet)">Delete</button>
-                            </div>
+                            <button class="btn btn-warning" @onclick="() => EditItem(pet)">Edit</button>
+                            <button class="btn btn-danger" @onclick="() => DeleteItem(pet)">Delete</button>
                         </td>
                     </tr>
                 }
