@@ -23,7 +23,7 @@
 else
 {
     <div class=" table-responsive-md">
-        <table class="table table-striped table-hover">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Month</th>
@@ -49,7 +49,7 @@ else
 
 @code {
     List<PetReportViewModel> petReportLists = new();
-    public PetReport currMonthlyPetReport { get; set; } = new();
+    public PetReportViewModel currMonthlyPetReport { get; set; } = new();
     bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
