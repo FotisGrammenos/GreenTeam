@@ -26,7 +26,7 @@ else
                 <option value="@Guid.Empty">Select Employee</option>
                 @foreach (var employee in Employees)
                 {
-                    <option value="@employee.Id">@(employee.Surname + employee.Name)</option>
+                    <option value="@employee.Id">@($"{employee.Surname} {employee.Name}")</option>
                 }
             </select>
         </div>
@@ -36,7 +36,7 @@ else
                 <option value="@Guid.Empty">Select Customer</option>
                 @foreach (var customer in Customers)
                 {
-                    <option value="@customer.Id">@(customer.Surname + customer.Name)</option>
+                    <option value="@customer.Id">@($"{customer.Surname} {customer.Name}")</option>
                 }
             </select>
         </div>

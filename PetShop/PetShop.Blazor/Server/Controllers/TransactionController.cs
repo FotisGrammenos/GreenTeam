@@ -22,8 +22,8 @@ namespace PetShop.Blazor.Server.Controllers
             {
                 ID = x.ID,
                 Date = x.Date,
-                CustomerName = x.Customer.Name + x.Customer.Surname,
-                EmployeeName = x.Employee.Name + x.Customer.Surname,
+                CustomerName = $"{x.Customer.Name} {x.Customer.Surname}",
+                EmployeeName = $"{x.Employee.Name} {x.Customer.Surname}",
                 PetPrice = x.Pet.Price,
                 PetFoodQty = x.PetFoodQty,
                 PetFoodPrice = x.PetFood.Price,
