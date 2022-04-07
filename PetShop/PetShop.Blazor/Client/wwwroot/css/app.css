@@ -1,7 +1,9 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+﻿@import url('https://fonts.googleapis.com/css2?family=Literata:wght@300;400;600&display=swap');
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Literata', Helvetica, Arial, sans-serif;
 }
 
 h1:focus {
@@ -10,12 +12,6 @@ h1:focus {
 
 a, .btn-link {
     color: #0071c1;
-}
-
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
 }
 
 .content {
