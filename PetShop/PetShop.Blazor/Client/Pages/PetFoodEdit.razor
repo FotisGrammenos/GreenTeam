@@ -32,11 +32,11 @@ else
     <div class="row mt-1">
         <div class="col-md-6">
             <label for="form-label">Cost</label>
-            <input type="number" class="form-control" @bind="@PetFoodItem.Cost" placeholder="Pet Food Cost" />
+            <input type="number" class="form-control" @bind="@PetFoodItem.Cost" placeholder="Pet Food Cost" min="0"/>
         </div>
         <div class="col-md-6">
             <label for="pet-label">Price</label>
-            <input type="number" class="form-control" @bind="@PetFoodItem.Price" placeholder="Pet Food Price" />
+            <input type="number" class="form-control" @bind="@PetFoodItem.Price" placeholder="Pet Food Price" min="0"/>
         </div>
     </div>
     <div class="row mt-2">

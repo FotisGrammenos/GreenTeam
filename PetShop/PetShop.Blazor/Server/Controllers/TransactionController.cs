@@ -66,5 +66,11 @@ namespace PetShop.Blazor.Server.Controllers
 
             await _transactionRepo.AddAsync(newTransaction);
         }
+
+        [HttpDelete("{id}")]
+        public async Task Delete(Guid id)
+        {
+            await _transactionRepo.DeleteAsync(id);
+        }
     }
 }

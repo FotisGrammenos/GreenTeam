@@ -48,11 +48,11 @@ else
     <div class="row mt-1">
         <div class="col-md-6">
             <label for="pet-cost">Cost</label>
-            <input name="pet-cost" type="number" class="form-control" @bind="@PetItem.Cost" placeholder="Pet Cost" />
+            <input name="pet-cost" type="number" class="form-control" @bind="@PetItem.Cost" placeholder="Pet Cost" min="0"/>
         </div>
         <div class="col-md-6">
             <label for="pet-price">Price</label>
-            <input name="pet-price" type="number" class="form-control" @bind="@PetItem.Price" placeholder="Pet Price" />
+            <input name="pet-price" type="number" class="form-control" @bind="@PetItem.Price" placeholder="Pet Price" min="0"/>
         </div>
     </div>
     <div class="row mt-2">

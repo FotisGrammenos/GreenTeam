@@ -23,7 +23,7 @@ else
     <div class="row-md-1">
             <div class="col-md-6">
                 <label for="employee-salary">Sallary</label>
-                <input name="employee-salary" type="number" class="form-control" @bind="@employeeItem.SallaryPerMonth" placeholder="Employee Sallary" />
+                <input name="employee-salary" type="number" class="form-control" @bind="@employeeItem.SallaryPerMonth" placeholder="Employee Sallary" min="1"/>
             </div> 
             <div class="col-md-6">
             <label for="employee-type">Type</label>
