@@ -10,9 +10,11 @@ namespace PetShop.Blazor.Server.Controllers
     public class TransactionController
     {
         private readonly IEntityRepo<Transaction> _transactionRepo;
-        public TransactionController(IEntityRepo<Transaction> transactionRepo)
+        private readonly IEntityRepo<Pet> _petRepo;
+        public TransactionController(IEntityRepo<Transaction> transactionRepo, IEntityRepo<Pet> petRepo)
         {
             _transactionRepo = transactionRepo;
+            _petRepo = petRepo;
         }
         [HttpGet]
         public async Task<IEnumerable<TransactionListViewModel>> Get()
@@ -52,6 +54,8 @@ namespace PetShop.Blazor.Server.Controllers
         [HttpPost]
         public async Task Post(TransactionEditViewModel transaction)
         {
+            var pet = await _petRepo.GetByIdAsync(transaction.PetID);
+            pet.PetStatus = PetStatus.Sold;
             var newTransaction = new Transaction()
             {
                 Date= transaction.Date,
@@ -71,6 +75,8 @@ namespace PetShop.Blazor.Server.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(Guid id)
         {
+            var transaction = await _transactionRepo.GetByIdAsync(id);
+            transaction.Pet.PetStatus = PetStatus.OK;
             await _transactionRepo.DeleteAsync(id);
         }
     }

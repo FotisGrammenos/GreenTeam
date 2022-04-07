@@ -20,10 +20,10 @@ namespace PetShop.Blazor.Server.Controllers
         public MonthlyLedgerController(IEntityRepo<MonthlyLedger> monthRepo, IEntityRepo<Employee> employeeRepo, IEntityRepo<Transaction> transactionRepo, IEntityRepo<Pet> petRepo, IEntityRepo<PetFood> petFoodRepo)
         {
             _monthlyLedgerRepo = monthRepo;
-            _petRepo=petRepo;
-            _transactionRepo=transactionRepo;
-            _employeeRepo=employeeRepo;
-            _petFood=petFoodRepo;
+            _petRepo = petRepo;
+            _transactionRepo = transactionRepo;
+            _employeeRepo = employeeRepo;
+            _petFood = petFoodRepo;
         }
 
         [HttpGet]
@@ -49,8 +49,8 @@ namespace PetShop.Blazor.Server.Controllers
                 ID = monthlyLedger.Id,
                 Month = monthlyLedger.Month,
                 Year = monthlyLedger.Year,
-                Expenses =await GetMonthlyExpenses(monthlyLedger),
-                Income =await GetIncome(monthlyLedger),
+                Expenses = await GetMonthlyExpenses(monthlyLedger),
+                Income = await GetIncome(monthlyLedger),
                 Total = await GetTotal(monthlyLedger)
             };
             await _monthlyLedgerRepo.AddAsync(newMonthlyLedger);
@@ -61,22 +61,24 @@ namespace PetShop.Blazor.Server.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(MonthlyLedgerListViewMondel monthlyLedger)
         {
-            var itemToUpdate = await _monthlyLedgerRepo.GetByIdAsync(monthlyLedger.Id);
+            var monthlyLedgersList = await _monthlyLedgerRepo.GetAllAsync();
+            var itemToUpdate = monthlyLedgersList.SingleOrDefault(ml => ml.Month == monthlyLedger.Month &&
+                                                                        ml.Year == monthlyLedger.Year);
             if (itemToUpdate == null) return NotFound();
             itemToUpdate.Expenses = await GetMonthlyExpenses(monthlyLedger);
             itemToUpdate.Income = await GetIncome(monthlyLedger);
             itemToUpdate.Total = await GetTotal(monthlyLedger);
 
-            await _monthlyLedgerRepo.UpdateAsync(monthlyLedger.Id, itemToUpdate);
+            await _monthlyLedgerRepo.UpdateAsync(itemToUpdate.ID, itemToUpdate);
 
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public async Task Delete(Guid id)
-        {
-            await _monthlyLedgerRepo.DeleteAsync(id);
-        }
+        //[HttpDelete("{id}")]
+        //public async Task Delete(Guid id)
+        //{
+        //    await _monthlyLedgerRepo.DeleteAsync(id);
+        //}
 
         private async Task<decimal> GetPetAndPetFoodExpences(MonthlyLedgerListViewMondel monthlyLedger)
         {
