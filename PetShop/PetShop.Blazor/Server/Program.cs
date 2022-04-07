@@ -16,6 +16,7 @@ builder.Services.AddScoped<IEntityRepo<PetFood>, PetFoodRepo>();
 builder.Services.AddScoped<IEntityRepo<Employee>, EmployeeRepo>();
 builder.Services.AddScoped<IEntityRepo<Transaction>, TransactionRepo>();
 builder.Services.AddScoped<IEntityRepo<MonthlyLedger>, MonthlyLedgerRepo>();
+builder.Services.AddScoped<IEntityRepo<PetReport>, PetReportRepo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

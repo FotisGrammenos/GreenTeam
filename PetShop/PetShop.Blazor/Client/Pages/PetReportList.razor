@@ -1,4 +1,4 @@
-﻿@page "/monthlyledgerlist"
+﻿@page "/petreportlist"
 @inject HttpClient httpClient
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navManager
@@ -9,11 +9,10 @@
 @using System.Globalization
 
 
-
-<h3>Monthly Ledgers </h3>
+<h3>PetReport</h3>
 <div class=row>
- 
-<button class="btn btn-primary w-25" @onclick="AddItem" >Add</button>
+
+    <button class="btn btn-primary w-25" @onclick="AddItem">Add</button>
 
 </div>
 @if (isLoading)
@@ -28,24 +27,22 @@ else
                 <tr>
                     <th>Month</th>
                     <th>Year</th>
-                    <th>Income</th>
-                    <th>Expenses</th>
-                    <th>Total</th>
+                    <th>Animal Type</th>
+                    <th>Total Sold</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var month in monthlyLedgerLists)
+                @foreach (var month in petReportLists)
                 {
                     <tr>
                         <td>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(int.Parse(month.Month))</td>
                         <td>@month.Year</td>
-                        <td>@month.Income</td>
-                        <td>@month.Expenses</td>
-                        <td>@month.Total</td>
+                        <td>@month.PetType</td>
+                        <td>@month.TotalSold</td>
                         <td>
                             <div class="btn-group">
-                                
+
                                 <button class="btn btn-danger btn-sm" @onclick="() => DeleteItem(month)">Delete</button>
                             </div>
                         </td>
@@ -55,11 +52,12 @@ else
         </table>
     </div>
 }
+
 @code {
-    List<MonthlyLedgerListViewMondel> monthlyLedgerLists=new();
-    MonthlyLedger currMonthlyLedger { get; set; } = new();
+    List<PetReportViewModel> petReportLists = new();
+    public PetReport currMonthlyPetReport { get; set; } = new();
     bool isLoading = true;
-   
+
     protected override async Task OnInitializedAsync()
     {
         await LoadItemsFromServer();
@@ -68,41 +66,41 @@ else
 
     private async Task LoadItemsFromServer()
     {
-        monthlyLedgerLists = await httpClient.GetFromJsonAsync<List<MonthlyLedgerListViewMondel>>("monthlyledger");
+        petReportLists = await httpClient.GetFromJsonAsync<List<PetReportViewModel>>("petreport");
     }
 
     async Task AddItem()
     {
+
         HttpResponseMessage response;
-        currMonthlyLedger.Month = DateTime.Now.Month.ToString();
-        currMonthlyLedger.Year = DateTime.Now.Year.ToString();
-        if (!MonthlyLedgerExist(currMonthlyLedger.Month,currMonthlyLedger.Year))
+        currMonthlyPetReport.Month = DateTime.Now.Month.ToString();
+        currMonthlyPetReport.Year = DateTime.Now.Year.ToString();
+        if (!MonthlyPetReportExist(currMonthlyPetReport.Month, currMonthlyPetReport.Year))
         {
-            response = await httpClient.PostAsJsonAsync("monthlyLedger", currMonthlyLedger);
+            response = await httpClient.PostAsJsonAsync("petReport", currMonthlyPetReport);
         }
         else
         {
-            response = await httpClient.PutAsJsonAsync("monthlyLedger", currMonthlyLedger);
+            response = await httpClient.PutAsJsonAsync("petReport", currMonthlyPetReport);
         }
         response.EnsureSuccessStatusCode();
         await LoadItemsFromServer();
     }
 
-    async Task DeleteItem(MonthlyLedgerListViewMondel monthlyLedger)
+    async Task DeleteItem(PetReportViewModel petReportList)
     {
         var confirm = await jsRuntime.InvokeAsync<bool>("confirmDelete", null);
         if (confirm)
         {
-            var response = await httpClient.DeleteAsync($"monthlyLedger/{monthlyLedger.Id}");
+            var response = await httpClient.DeleteAsync($"petReport/{petReportList.Id}");
             response.EnsureSuccessStatusCode();
             await LoadItemsFromServer();
         }
     }
-
-    private bool MonthlyLedgerExist(string month, string year)
+    private bool MonthlyPetReportExist(string month,string year)
     {
-        var findMonthlyLedger = monthlyLedgerLists.SingleOrDefault(searchMonth => searchMonth.Month == month && searchMonth.Year == year);
-        if (findMonthlyLedger == null)
+        var findMonthlyPetReport = petReportLists.FirstOrDefault(searchMonth => searchMonth.Month == month && searchMonth.Year == year);
+        if (findMonthlyPetReport == null)
             return false;
         return true;
     }

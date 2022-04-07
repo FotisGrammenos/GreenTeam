@@ -39,9 +39,10 @@ namespace PetShop.EF.Repos
             return await _context.PetReports.SingleOrDefaultAsync(petReport => petReport.ID == id);
         }
 
-        public Task UpdateAsync(Guid id, PetReport entity)
+        public async Task UpdateAsync(Guid id, PetReport entity)
         {
-            throw new NotImplementedException();
+            UpdateLogic(id, entity, _context);
+            await _context.SaveChangesAsync();
         }
 
         private void AddLogic(PetReport entity)
@@ -60,6 +61,13 @@ namespace PetShop.EF.Repos
 
             _context.PetReports.Remove(currentPetReport);
         }
+        private void UpdateLogic(Guid id, PetReport entity, PetShopContext context)
+        {
+            var currentPetReport = context.PetReports.SingleOrDefault(report => report.ID == id);
+            if (currentPetReport is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
 
+            currentPetReport.TotalSold = entity.TotalSold;
+        }
     }
 }
