@@ -55,8 +55,15 @@ else
         {
             Id = Guid.Empty;
         }
+        
         employeeItem = await httpClient.GetFromJsonAsync<EmployeeEditViewModel>($"employee/{Id}");
+
+        if(Id != null)
+        {
+            EmployeeType = (int)employeeItem.EmployeeType;
+        }
     }
+
     protected async Task OnSave()
     {
         if (string.IsNullOrEmpty(employeeItem.Name) ||

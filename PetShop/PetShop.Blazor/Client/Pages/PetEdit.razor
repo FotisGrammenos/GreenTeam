@@ -77,7 +77,13 @@ else
         }
 
         PetItem = await httpClient.GetFromJsonAsync<PetEditViewModel>($"pet/{Id}");
-        
+
+        if(Id != null)
+        {
+            PetType = (int)PetItem.Type;
+            PetStatus = (int)PetItem.Status;
+        }
+
     }
 
     protected async Task OnSave()

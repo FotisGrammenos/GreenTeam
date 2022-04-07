@@ -60,6 +60,11 @@ else
         }
 
         PetFoodItem = await httpClient.GetFromJsonAsync<PetFoodListViewModel>($"PetFood/{Id}");
+
+        if(Id != null)
+        {
+            PetFoodType = (int)PetFoodItem.AnimalType;
+        }
     }
 
     protected async Task OnSave()

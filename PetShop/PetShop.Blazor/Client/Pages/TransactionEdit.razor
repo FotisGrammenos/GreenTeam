@@ -91,6 +91,7 @@ else
         }
 
         TransactionItem = await httpClient.GetFromJsonAsync<TransactionEditViewModel>($"Transaction/{Id}");
+
     }
 
     protected async Task OnSave()
