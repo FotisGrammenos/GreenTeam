@@ -19,6 +19,15 @@ else
     {
         <h2>Edit @PetItem.Breed</h2>
     }
+    @if (ShowingErrorMessages)
+    {
+        <div class="row">
+            <div class="alert alert-info" role="alert">
+                <p>There was an error with the input fields.</p>
+                <p>Please make sure that you have enter all the values correctly.</p>
+            </div>
+        </div>
+    }
     <div class="row">
         <div class="col-md-12">
             <label for="pet-breed">Breed</label>
@@ -50,11 +59,11 @@ else
     <div class="row mt-1">
         <div class="col-md-6">
             <label for="pet-cost">Cost</label>
-            <input name="pet-cost" type="number" class="form-control" @bind="@PetItem.Cost" placeholder="Pet Cost" min="0"/>
+            <input name="pet-cost" type="number" class="form-control" @bind="@PetItem.Cost" placeholder="Pet Cost" min="0" />
         </div>
         <div class="col-md-6">
             <label for="pet-price">Price</label>
-            <input name="pet-price" type="number" class="form-control" @bind="@PetItem.Price" placeholder="Pet Price" min="0"/>
+            <input name="pet-price" type="number" class="form-control" @bind="@PetItem.Price" placeholder="Pet Price" min="0" />
         </div>
     </div>
     <div class="row mt-2">
@@ -70,6 +79,7 @@ else
     PetEditViewModel PetItem { get; set; }
     private int PetType { get; set; } = -1;
     private int PetStatus { get; set; } = -1;
+    private bool ShowingErrorMessages = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -80,7 +90,7 @@ else
 
         PetItem = await httpClient.GetFromJsonAsync<PetEditViewModel>($"pet/{Id}");
 
-        if(Id != null)
+        if (Id != null)
         {
             PetType = (int)PetItem.Type;
             PetStatus = (int)PetItem.Status;
@@ -93,9 +103,14 @@ else
         if (string.IsNullOrEmpty(PetItem.Breed) ||
             PetType == -1 ||
             PetStatus == -1 ||
-            PetItem.Cost == 0 ||
-            PetItem.Price == 0)
+            PetItem.Cost <= 0 ||
+            PetItem.Price <= 0)
+        {
+            ShowingErrorMessages = true;
             return;
+        }
+        ShowingErrorMessages = false;
+
 
         HttpResponseMessage response;
         PetItem.Type = (AnimalType)PetType;

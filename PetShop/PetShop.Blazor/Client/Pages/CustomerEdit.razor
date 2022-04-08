@@ -18,6 +18,15 @@ else
     {
         <h2>Edit @($"{CustomerItem.Surname} {CustomerItem.Name}")</h2>
     }
+    @if (ShowingErrorMessages)
+    {
+        <div class="row">
+            <div class="alert alert-info" role="alert">
+                <p>There was an error with the input fields.</p>
+                <p>Please make sure that you have enter all the values correctly.</p>
+            </div>
+        </div>
+    }
    <div class="row">
         <div class="col-md-3">
             <label class="form-label">Name</label>
@@ -52,6 +61,7 @@ else
     [Parameter] public Guid? Id { get; set ; } 
 
     CustomerEditViewModel CustomerItem { get; set; }
+    private bool ShowingErrorMessages = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,7 +77,11 @@ else
             string.IsNullOrEmpty(CustomerItem.Surname) ||
             string.IsNullOrEmpty(CustomerItem.Phone) ||
             string.IsNullOrEmpty(CustomerItem.TIN))
+        {
+            ShowingErrorMessages = true;
             return;
+        }
+        ShowingErrorMessages = false;
         HttpResponseMessage response;
         if (Id == Guid.Empty)
         {

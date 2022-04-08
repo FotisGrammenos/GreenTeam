@@ -17,6 +17,15 @@
 }
 else
 {
+    @if (ShowingErrorMessages)
+    {
+        <div class="row">
+            <div class="alert alert-info" role="alert">
+                <p>There was an error with the input fields.</p>
+                <p>Please make sure that you have enter all the values correctly.</p>
+            </div>
+        </div>
+    }
     <div class="row">
         <div class="col-md-6">
             <label for="tr-date">Date</label>
@@ -81,6 +90,7 @@ else
     private List<EmployeeListViewModel>? Employees { get; set; } = new();
     private List<PetListViewModel>? Pets { get; set; } = new();
     private List<PetFoodListViewModel>? Foods { get; set; } = new();
+    private bool ShowingErrorMessages = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -104,8 +114,12 @@ else
             TransactionEmployee == Guid.Empty ||
             TransactionPet == Guid.Empty ||
             TransactionItem.Date == null ||
-            TransactionItem.PetFoodQty == 0)
+            TransactionItem.PetFoodQty <= 1)
+        {
+            ShowingErrorMessages = true;
             return;
+        }
+        ShowingErrorMessages = false;
         HttpResponseMessage response;
         if (Id == Guid.Empty)
         {
